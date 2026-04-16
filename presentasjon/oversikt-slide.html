@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agenda</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0a0a0a;
+        color: #f5f5f5;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        overflow: hidden;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 2rem;
+      }
+
+      .label {
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      h1 .highlight {
+        background: linear-gradient(135deg, #d4a574, #c084fc, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        padding: 18px 22px;
+        border-radius: 10px;
+        border: 1px solid;
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 0.4s ease-out forwards;
+      }
+
+      .card:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+      .card:nth-child(2) {
+        animation-delay: 0.35s;
+      }
+      .card:nth-child(3) {
+        animation-delay: 0.5s;
+      }
+      .card:nth-child(4) {
+        animation-delay: 0.65s;
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .card-icon {
+        flex: 0 0 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .card-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      .card-points {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-left: 44px;
+        margin-top: 2px;
+      }
+
+      .card-points li {
+        font-size: 0.8rem;
+        color: #999;
+        position: relative;
+        padding-left: 14px;
+      }
+
+      .card-points li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #555;
+      }
+
+      /* Card 1: purple */
+      .card-purple {
+        border-color: #4a2d6e;
+        background: rgba(74, 45, 110, 0.12);
+      }
+      .card-purple .card-icon {
+        background: #4a2d6e;
+        color: #c084fc;
+      }
+
+      /* Card 2: blue */
+      .card-blue {
+        border-color: #1e3a5f;
+        background: rgba(30, 58, 95, 0.12);
+      }
+      .card-blue .card-icon {
+        background: #1e3a5f;
+        color: #60a5fa;
+      }
+
+      /* Card 3: amber */
+      .card-amber {
+        border-color: #5c3d1e;
+        background: rgba(92, 61, 30, 0.12);
+      }
+      .card-amber .card-icon {
+        background: #5c3d1e;
+        color: #d4a574;
+      }
+
+      /* Card 4: green */
+      .card-green {
+        border-color: #1e5f3a;
+        background: rgba(30, 95, 58, 0.12);
+      }
+      .card-green .card-icon {
+        background: #1e5f3a;
+        color: #4ade80;
+      }
+
+      .build-banner {
+        margin-top: 2rem;
+        text-align: center;
+        opacity: 0;
+        animation: fadeUp 0.5s ease-out 1s forwards;
+      }
+
+      .build-banner p {
+        font-size: 1rem;
+        color: #666;
+      }
+
+      .build-banner .app-name {
+        font-weight: 700;
+        color: #e0e0e0;
+      }
+
+      .build-banner .app-desc {
+        font-size: 0.8rem;
+        color: #555;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p class="label">Agenda</p>
+      <h1>
+        <span class="highlight">Introduksjon</span>
+      </h1>
+
+      <div class="grid">
+        <div class="card card-purple">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="4 17 10 11 4 5" />
+                <line x1="12" y1="19" x2="20" y2="19" />
+              </svg>
+            </div>
+            <div class="card-title">Hva er Claude Code?</div>
+          </div>
+          <ul class="card-points">
+            <li>AI-agent i terminalen</li>
+            <li>Leser, skriver og kjører kode</li>
+            <li>Språkmodell vs AI-agent</li>
+          </ul>
+        </div>
+
+        <div class="card card-blue">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M13 5H1v14h12" />
+                <polygon points="17 1 23 12 17 23" />
+              </svg>
+            </div>
+            <div class="card-title">Vibe coding til agentic engineering</div>
+          </div>
+          <ul class="card-points">
+            <li>Kode uten å forstå = risiko</li>
+            <li>Samme verktøy, mer struktur</li>
+            <li>Kontroll + intensjon = kvalitet</li>
+          </ul>
+        </div>
+
+        <div class="card card-amber">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="2" width="8" height="8" rx="1" />
+                <rect x="14" y="2" width="8" height="8" rx="1" />
+                <rect x="2" y="14" width="8" height="8" rx="1" />
+                <rect x="14" y="14" width="8" height="8" rx="1" />
+              </svg>
+            </div>
+            <div class="card-title">Konsepter</div>
+          </div>
+          <ul class="card-points">
+            <li>Skills, commands, hooks, MCP-servere, agenter</li>
+            <li>Kontekststyring: CLAUDE.md, rules, auto memory</li>
+            <li>Tårer og frustrasjon</li>
+          </ul>
+        </div>
+
+        <div class="card card-green">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </div>
+            <div class="card-title">Live coding</div>
+          </div>
+          <ul class="card-points">
+            <li>Bygge XperQuiz fra scratch</li>
+            <li>Vibe coding!</li>
+            <li>Intenst</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="build-banner">
+        <p>
+          Vi bygger <span class="app-name">XperQuiz</span> — live quiz der
+          publikum (dere gærninger) spiller mot hverandre.
+        </p>
+        <p class="app-desc">
+          Google OAuth / AI-genererte spørsmål / sanntids-polling / serverless
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
