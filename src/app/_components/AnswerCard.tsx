@@ -41,13 +41,18 @@ export function AnswerCard({
     ? "var(--acid)"
     : wrong
       ? "var(--flare)"
-      : optColor;
+      : dim
+        ? "var(--ink-2)"
+        : optColor;
+
+  const textColor = dim ? "var(--bone-dim)" : "var(--ink)";
 
   const cardStyle: React.CSSProperties = {
     background,
-    color: "var(--ink)",
+    color: textColor,
     animationDelay: `${revealDelay}ms`,
     ...(selected ? { outline: "3px solid var(--bone)", outlineOffset: "3px" } : {}),
+    ...(correct ? { outline: "3px solid var(--bone)", outlineOffset: "3px" } : {}),
   };
 
   const Tag: "button" | "div" = interactive ? "button" : "div";
@@ -59,7 +64,6 @@ export function AnswerCard({
       onClick={interactive ? onClick : undefined}
       className={[
         baseClasses,
-        dim ? "opacity-45 saturate-50" : "",
         correct ? "anim-pulse-correct" : "",
       ].join(" ")}
       style={cardStyle}
@@ -67,11 +71,12 @@ export function AnswerCard({
     >
       <div className="flex items-center gap-3">
         <span
-          className="grid shrink-0 place-items-center rounded-full border-2 border-ink font-mono text-sm font-black"
+          className="grid shrink-0 place-items-center rounded-full border-2 font-mono text-sm font-black"
           style={{
             width: 30,
             height: 30,
-            background: "rgba(11,10,8,0.14)",
+            background: dim ? "rgba(243,236,217,0.06)" : "rgba(11,10,8,0.14)",
+            borderColor: dim ? "var(--bone-faint)" : "var(--ink)",
           }}
         >
           {letter}
