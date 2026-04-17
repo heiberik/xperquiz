@@ -13,7 +13,8 @@ export async function POST() {
     const player = await joinGame(
       game.id,
       session.user.id,
-      session.user.name
+      session.user.name,
+      session.user.image ?? null
     );
 
     return NextResponse.json({ success: true, player });

@@ -10,10 +10,11 @@ import {
   addPlayerScore,
   calculateScore,
 } from "@/lib/db/queries";
+import { ALTERNATIVES_PER_QUESTION } from "@/lib/constants";
 
 const answerSchema = z.object({
-  questionId: z.number(),
-  selectedIndex: z.number(),
+  questionId: z.number().int().positive(),
+  selectedIndex: z.number().int().min(0).max(ALTERNATIVES_PER_QUESTION - 1),
 });
 
 export async function POST(request: Request) {

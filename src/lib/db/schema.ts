@@ -84,7 +84,9 @@ export const players = pgTable(
       .notNull()
       .references(() => user.id),
     name: text("name").notNull(),
+    image: text("image"),
     score: integer("score").notNull().default(0),
+    totalScore: integer("total_score").notNull().default(0),
     lastPolledAt: timestamp("last_polled_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },

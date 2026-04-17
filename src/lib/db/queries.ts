@@ -1,7 +1,11 @@
 import { eq, and, sql, desc, gt } from "drizzle-orm";
 import { db } from ".";
 import { games, players, questions, answers } from "./schema";
-import { INACTIVE_TIMEOUT, QUESTION_TIME } from "../constants";
+import {
+  ALTERNATIVES_PER_QUESTION,
+  INACTIVE_TIMEOUT,
+  QUESTION_TIME,
+} from "../constants";
 import type { GameStatus } from "../types";
 
 export async function getOrCreateGame() {
@@ -15,10 +19,15 @@ export async function getOrCreateGame() {
   return game;
 }
 
-export async function joinGame(gameId: number, userId: string, name: string) {
+export async function joinGame(
+  gameId: number,
+  userId: string,
+  name: string,
+  image: string | null
+) {
   const [player] = await db
     .insert(players)
-    .values({ gameId, userId, name, lastPolledAt: new Date() })
+    .values({ gameId, userId, name, image, lastPolledAt: new Date() })
     .onConflictDoNothing()
     .returning();
 
@@ -62,7 +71,9 @@ export async function getActivePlayers(gameId: number) {
     .select({
       id: players.id,
       name: players.name,
+      image: players.image,
       score: players.score,
+      totalScore: players.totalScore,
     })
     .from(players)
     .where(and(eq(players.gameId, gameId), gt(players.lastPolledAt, cutoff)));
@@ -118,7 +129,9 @@ export async function getLeaderboard(gameId: number) {
     .select({
       id: players.id,
       name: players.name,
+      image: players.image,
       score: players.score,
+      totalScore: players.totalScore,
     })
     .from(players)
     .where(and(eq(players.gameId, gameId), gt(players.lastPolledAt, cutoff)))
@@ -131,7 +144,9 @@ export async function getRoundWinner(gameId: number) {
     .select({
       id: players.id,
       name: players.name,
+      image: players.image,
       score: players.score,
+      totalScore: players.totalScore,
     })
     .from(players)
     .where(and(eq(players.gameId, gameId), gt(players.lastPolledAt, cutoff)))
@@ -222,6 +237,7 @@ export async function addPlayerScore(playerId: number, scoreToAdd: number) {
     .update(players)
     .set({
       score: sql`${players.score} + ${scoreToAdd}`,
+      totalScore: sql`${players.totalScore} + ${scoreToAdd}`,
     })
     .where(eq(players.id, playerId));
 }
@@ -232,6 +248,23 @@ export async function getGameById(gameId: number) {
     .from(games)
     .where(eq(games.id, gameId));
   return result[0] ?? null;
+}
+
+export async function getAnswerDistribution(
+  questionId: number
+): Promise<number[]> {
+  const rows = await db
+    .select({
+      selectedIndex: answers.selectedIndex,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(answers)
+    .where(eq(answers.questionId, questionId))
+    .groupBy(answers.selectedIndex);
+
+  const distribution = new Array(ALTERNATIVES_PER_QUESTION).fill(0);
+  for (const row of rows) distribution[row.selectedIndex] = row.count;
+  return distribution;
 }
 
 export function calculateScore(

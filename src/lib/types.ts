@@ -9,7 +9,9 @@ export type GameStatus =
 export type Player = {
   id: number;
   name: string;
+  image: string | null;
   score: number;
+  totalScore: number;
 };
 
 export type Question = {
@@ -24,6 +26,7 @@ export type GameState = {
   players: Player[];
   currentQuestion: Question | null;
   questionId: number | null;
+  answerDistribution: number[] | null;
   questionIndex: number;
   questionsPerRound: number;
   topic: string | null;

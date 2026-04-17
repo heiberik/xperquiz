@@ -15,6 +15,7 @@ import {
   getGameById,
   updateGameTopic,
   incrementQuestionIndex,
+  getAnswerDistribution,
 } from "@/lib/db/queries";
 import { QUESTIONS_PER_ROUND, RANDOM_TOPICS } from "@/lib/constants";
 import type { GameStatus, GameState } from "@/lib/types";
@@ -76,6 +77,7 @@ export async function GET(request: Request) {
         players: activePlayers,
         currentQuestion: null,
         questionId: null,
+        answerDistribution: null,
         questionIndex: game.currentQuestionIndex,
         questionsPerRound: QUESTIONS_PER_ROUND,
         topic: game.currentTopic,
@@ -155,6 +157,11 @@ export async function GET(request: Request) {
       roundWinner = await getRoundWinner(game.id);
     }
 
+    let answerDistribution: number[] | null = null;
+    if (currentStatus === "showing_answer" && questionId !== null) {
+      answerDistribution = await getAnswerDistribution(questionId);
+    }
+
     const playersList =
       currentStatus === "topic_selection"
         ? await getLeaderboard(game.id)
@@ -170,6 +177,7 @@ export async function GET(request: Request) {
       players: playersList,
       currentQuestion,
       questionId,
+      answerDistribution,
       questionIndex: currentQuestionIdx,
       questionsPerRound: QUESTIONS_PER_ROUND,
       topic: currentTopic,

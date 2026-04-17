@@ -1,19 +1,279 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --ink: #0b0a08;
+  --ink-2: #15120e;
+  --bone: #f3ecd9;
+  --bone-dim: rgba(243, 236, 217, 0.65);
+  --bone-faint: rgba(243, 236, 217, 0.35);
+  --spot: #ffb347;
+  --acid: #c8ff4d;
+  --flare: #ff5a3c;
+  --opt-1: #e94f4a;
+  --opt-2: #3a86ff;
+  --opt-3: #ffb703;
+  --opt-4: #2ec27e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-bone: var(--bone);
+  --color-bone-dim: var(--bone-dim);
+  --color-bone-faint: var(--bone-faint);
+  --color-spot: var(--spot);
+  --color-acid: var(--acid);
+  --color-flare: var(--flare);
+  --color-opt-1: var(--opt-1);
+  --color-opt-2: var(--opt-2);
+  --color-opt-3: var(--opt-3);
+  --color-opt-4: var(--opt-4);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+html,
+body {
+  background: var(--ink);
+  color: var(--bone);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "ss02";
+}
+
+::selection {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+/* ---------- Atmosphere ---------- */
+
+.spotlight {
+  position: fixed;
+  inset: -20vmax;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60vmax 60vmax at 50% 38%,
+      rgba(255, 179, 71, 0.22) 0%,
+      rgba(255, 179, 71, 0.08) 35%,
+      transparent 70%
+    ),
+    radial-gradient(
+      90vmax 70vmax at 85% 110%,
+      rgba(58, 134, 255, 0.10) 0%,
+      transparent 60%
+    );
+  animation: spotlightPulse 11s ease-in-out infinite;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(243, 236, 217, 0.06) 2px,
+    rgba(243, 236, 217, 0.06) 3px
+  );
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+}
+
+/* ---------- Card offset (brutalist tactile press) ---------- */
+
+.card-offset {
+  border: 2px solid var(--bone);
+  box-shadow: 6px 6px 0 0 var(--bone);
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out;
+}
+.card-offset:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 7px 7px 0 0 var(--bone);
+}
+.card-offset:active:not(:disabled),
+.card-offset[data-pressed="true"] {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 0 var(--bone);
+}
+
+.card-offset-ink {
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 0 var(--ink);
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out;
+}
+.card-offset-ink:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 7px 7px 0 0 var(--ink);
+}
+.card-offset-ink:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 0 var(--ink);
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes spotlightPulse {
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08) translate(2%, -1%);
+    opacity: 0.85;
+  }
+}
+
+@keyframes wordReveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes cardStagger {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countdownIn {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-4deg);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes confettiFall {
+  from {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0) rotate(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(var(--confetti-x, 0), 140px, 0)
+      rotate(var(--confetti-r, 360deg));
+  }
+}
+
+@keyframes pulseCorrect {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.04);
+  }
+  60% {
+    transform: scale(0.99);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blinkCursor {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Waveform stroke draws across then shifts */
+@keyframes oscilloscope {
+  from {
+    stroke-dashoffset: 800;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.anim-word-reveal > * {
+  display: inline-block;
+  opacity: 0;
+  animation: wordReveal 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-card-stagger {
+  opacity: 0;
+  animation: cardStagger 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-countdown-in {
+  animation: countdownIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-pulse-correct {
+  animation: pulseCorrect 900ms ease-out 1;
+}
+
+.anim-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.anim-blink {
+  animation: blinkCursor 1s step-end infinite;
+}
+
+/* ---------- Accessibility ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .spotlight {
+    animation: none;
+  }
 }
