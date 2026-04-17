@@ -24,7 +24,7 @@ export function AnswerCard({
   onClick?: () => void;
   revealDelay?: number;
 }) {
-  const color = OPT_COLORS[index % OPT_COLORS.length];
+  const optColor = OPT_COLORS[index % OPT_COLORS.length];
   const letter = OPT_LETTERS[index % OPT_LETTERS.length];
 
   const baseClasses =
@@ -32,16 +32,23 @@ export function AnswerCard({
 
   const interactive = !disabled && state === "idle";
 
-  const cornerStyle: React.CSSProperties = {
-    background: color,
-    color: "var(--ink)",
-    animationDelay: `${revealDelay}ms`,
-  };
-
   const dim = state === "dim";
   const correct = state === "correct";
   const selected = state === "selected";
   const wrong = state === "wrong";
+
+  const background = correct
+    ? "var(--acid)"
+    : wrong
+      ? "var(--flare)"
+      : optColor;
+
+  const cardStyle: React.CSSProperties = {
+    background,
+    color: "var(--ink)",
+    animationDelay: `${revealDelay}ms`,
+    ...(selected ? { outline: "3px solid var(--bone)", outlineOffset: "3px" } : {}),
+  };
 
   const Tag: "button" | "div" = interactive ? "button" : "div";
 
@@ -53,11 +60,9 @@ export function AnswerCard({
       className={[
         baseClasses,
         dim ? "opacity-45 saturate-50" : "",
-        correct ? "anim-pulse-correct ring-4 ring-bone" : "",
-        wrong ? "ring-4 ring-flare" : "",
-        selected ? "ring-4 ring-bone" : "",
+        correct ? "anim-pulse-correct" : "",
       ].join(" ")}
-      style={cornerStyle}
+      style={cardStyle}
       aria-pressed={selected || undefined}
     >
       <div className="flex items-center gap-3">
